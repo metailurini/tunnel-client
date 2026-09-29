@@ -99,12 +99,10 @@ func TestConvertRawCommand_SuccessAndErrors(t *testing.T) {
 	req := &jsonrpc.Request{Method: "initialize"}
 	enc, _ := jsonrpc.EncodeMessage(req)
 	raw := wiretypes.RawJSONRPCPolledCommand{
-		BaseRawPolledCommand: wiretypes.BaseRawPolledCommand{
-			RequestID:  "r1",
-			ShardToken: "shard-1",
-			CreatedAt:  time.Unix(1732844889, 0).UTC(),
-		},
-		JSONRPC: json.RawMessage(enc),
+		RequestID:  "r1",
+		ShardToken: "shard-1",
+		CreatedAt:  time.Unix(1732844889, 0).UTC(),
+		JSONRPC:    json.RawMessage(enc),
 	}
 	cmd, err := convertRawCommand(raw, time.Now())
 	if err != nil {
@@ -125,12 +123,10 @@ func TestConvertRawOauthDiscoveryCommand_Success(t *testing.T) {
 	t.Parallel()
 
 	raw := wiretypes.RawOauthDiscoveryPolledCommand{
-		BaseRawPolledCommand: wiretypes.BaseRawPolledCommand{
-			RequestID:  "oauth-1",
-			ShardToken: "sh-oauth",
-			CreatedAt:  time.Unix(1732844889, 0).UTC(),
-			Headers:    http.Header{"X": {"y"}},
-		},
+		RequestID:  "oauth-1",
+		ShardToken: "sh-oauth",
+		CreatedAt:  time.Unix(1732844889, 0).UTC(),
+		Headers:    http.Header{"X": {"y"}},
 	}
 	cmd, err := convertRawOauthDiscoveryCommand(raw, time.Unix(1732844890, 0).UTC())
 	if err != nil {
@@ -151,12 +147,10 @@ func TestConvertRawSessionTerminationCommand_RequiresSessionHeader(t *testing.T)
 	t.Parallel()
 
 	raw := wiretypes.RawSessionTerminationPolledCommand{
-		BaseRawPolledCommand: wiretypes.BaseRawPolledCommand{
-			RequestID:  "terminate-1",
-			ShardToken: "sh-terminate",
-			CreatedAt:  time.Unix(1732844889, 0).UTC(),
-			Headers:    http.Header{"mcp-session-id": {"session-123"}},
-		},
+		RequestID:  "terminate-1",
+		ShardToken: "sh-terminate",
+		CreatedAt:  time.Unix(1732844889, 0).UTC(),
+		Headers:    http.Header{"mcp-session-id": {"session-123"}},
 	}
 	cmd, err := convertRawSessionTerminationCommand(raw, time.Unix(1732844890, 0).UTC())
 	if err != nil {

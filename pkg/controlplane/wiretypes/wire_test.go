@@ -15,15 +15,13 @@ func TestRawJSONRPCPolledCommandMarshalFieldNames(t *testing.T) {
 
 	createdAt := time.Date(2024, time.September, 4, 12, 30, 0, 0, time.UTC)
 	cmd := RawJSONRPCPolledCommand{
-		BaseRawPolledCommand: BaseRawPolledCommand{
-			RequestID:   "req-123",
-			ShardToken:  "shard-456",
-			CommandType: CommandTypeJSONRPC,
-			Channel:     "harpoon",
-			CreatedAt:   createdAt,
-			Headers: http.Header{
-				"X-Trace-ID": []string{"trace-789"},
-			},
+		RequestID:   "req-123",
+		ShardToken:  "shard-456",
+		CommandType: CommandTypeJSONRPC,
+		Channel:     "harpoon",
+		CreatedAt:   createdAt,
+		Headers: http.Header{
+			"X-Trace-ID": []string{"trace-789"},
 		},
 		JSONRPC: json.RawMessage(`{"jsonrpc":"2.0","id":"rpc-99","method":"tools/list","params":{"needle":"hay"}}`),
 	}
@@ -72,13 +70,11 @@ func TestResponseTimeoutIsOptionalDurationString(t *testing.T) {
 
 	responseTimeout := ResponseTimeoutDuration("30s")
 	command := RawJSONRPCPolledCommand{
-		BaseRawPolledCommand: BaseRawPolledCommand{
-			RequestID:       "req-timeout",
-			ShardToken:      "shard-timeout",
-			CommandType:     CommandTypeJSONRPC,
-			ResponseTimeout: &responseTimeout,
-		},
-		JSONRPC: json.RawMessage(`{"jsonrpc":"2.0","id":"rpc-1","method":"tools/list"}`),
+		RequestID:       "req-timeout",
+		ShardToken:      "shard-timeout",
+		CommandType:     CommandTypeJSONRPC,
+		ResponseTimeout: &responseTimeout,
+		JSONRPC:         json.RawMessage(`{"jsonrpc":"2.0","id":"rpc-1","method":"tools/list"}`),
 	}
 
 	payload, err := json.Marshal(command)

@@ -172,9 +172,9 @@ func TestPollerRecordsQueueDropsAndCommandAge(t *testing.T) {
 		t: t,
 		data: []controlplane.PolledCommand{
 			agedCommand{
-				stubCommand: stubCommand{id: "1"},
-				enqueuedAt:  time.Now().Add(-3 * time.Second),
-				polledAt:    time.Now(),
+				id:         "1",
+				enqueuedAt: time.Now().Add(-3 * time.Second),
+				polledAt:   time.Now(),
 			},
 		},
 	}

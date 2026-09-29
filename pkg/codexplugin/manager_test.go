@@ -149,9 +149,7 @@ func TestConnectRejectsLiteralRuntimeSecretBeforePersistence(t *testing.T) {
 	}), session.Runtime{})
 
 	_, err := manager.Connect(ConnectOptions{
-		CreateOptions: CreateOptions{
-			Alias: "docs-mcp",
-		},
+		Alias:         "docs-mcp",
 		MCPCommand:    "python server.py",
 		RuntimeAPIKey: secret,
 	})
@@ -220,12 +218,10 @@ func TestConcurrentConnectSameAliasStartsOnlyOneProcess(t *testing.T) {
 		"HOME":                      t.TempDir(),
 	})
 	opts := ConnectOptions{
-		CreateOptions: CreateOptions{
-			Alias:               "docs-mcp",
-			ControlPlaneBaseURL: healthServer.URL,
-		},
-		TunnelID:   "tunnel_0123456789abcdefghijklmnopqrstuv",
-		MCPCommand: "python server.py",
+		Alias:               "docs-mcp",
+		ControlPlaneBaseURL: healthServer.URL,
+		TunnelID:            "tunnel_0123456789abcdefghijklmnopqrstuv",
+		MCPCommand:          "python server.py",
 	}
 	type connectResult struct {
 		payload map[string]any
@@ -328,12 +324,10 @@ func TestConnectCleansUpNewProcessWhenProcessStateSaveFails(t *testing.T) {
 	})
 
 	_, err := NewManager(lookupEnv, runtime).Connect(ConnectOptions{
-		CreateOptions: CreateOptions{
-			Alias:               "docs-mcp",
-			ControlPlaneBaseURL: healthServer.URL,
-		},
-		TunnelID:   "tunnel_0123456789abcdefghijklmnopqrstuv",
-		MCPCommand: "python server.py",
+		Alias:               "docs-mcp",
+		ControlPlaneBaseURL: healthServer.URL,
+		TunnelID:            "tunnel_0123456789abcdefghijklmnopqrstuv",
+		MCPCommand:          "python server.py",
 	})
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "processes.yaml.tmp")
@@ -374,12 +368,10 @@ func TestConnectDoesNotPersistProcessWhenIdentityCaptureSafelyAborts(t *testing.
 	})
 
 	_, err := NewManager(lookupEnv, runtime).Connect(ConnectOptions{
-		CreateOptions: CreateOptions{
-			Alias:               "docs-mcp",
-			ControlPlaneBaseURL: healthServer.URL,
-		},
-		TunnelID:   "tunnel_0123456789abcdefghijklmnopqrstuv",
-		MCPCommand: "python server.py",
+		Alias:               "docs-mcp",
+		ControlPlaneBaseURL: healthServer.URL,
+		TunnelID:            "tunnel_0123456789abcdefghijklmnopqrstuv",
+		MCPCommand:          "python server.py",
 	})
 	require.Error(t, err)
 	require.Contains(t, err.Error(), "safely aborted launched process before state persistence")

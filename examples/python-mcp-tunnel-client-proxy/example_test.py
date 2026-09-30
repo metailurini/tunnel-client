@@ -4,7 +4,7 @@ import os
 import socket
 import threading
 import time
-from collections.abc import Iterator
+from collections.abc import Generator
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -71,7 +71,7 @@ def test_http_example_starts_fastmcp_server_and_calls_it_through_proxy() -> None
 
 
 @contextmanager
-def _started_fastmcp_echo_server(calls: list[str]) -> Iterator[str]:
+def _started_fastmcp_echo_server(calls: list[str]) -> Generator[str, None, None]:
     port = _free_port()
     mcp = FastMCP("mcp-tunnel-client-proxy-python-example")
 

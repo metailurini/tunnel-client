@@ -309,6 +309,7 @@ func (p *mcpProcessor) Process(ctx context.Context, cmd controlplane.PolledComma
 
 	requestID := cmd.RequestID()
 	ctx = tunnelctx.ContextWithRequestID(ctx, requestID.String())
+	ctx = tunnelctx.ContextWithOpenAISessionID(ctx, cmd.Headers().Get("X-Openai-Session"))
 	if controlPlaneRequestID, ok := types.NewControlPlaneRequestIDFromHeader(cmd.Headers()); ok {
 		ctx = tunnelctx.ContextWithControlPlaneCommandRequestID(ctx, controlPlaneRequestID)
 	}

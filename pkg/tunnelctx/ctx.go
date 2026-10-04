@@ -12,12 +12,26 @@ type contextKey struct{}
 
 type identifiers struct {
 	sessionID                    string
+	openAISessionID              string
 	requestID                    string
 	controlPlaneCommandRequestID types.ControlPlaneRequestID
 	tunnelServiceRequestID       types.TunnelServiceRequestID
 	shardToken                   string
 	rpcRequestID                 *jsonrpc.ID
 	channel                      types.Channel
+}
+
+// ContextWithOpenAISessionID returns a child context that stores the OpenAI
+// conversation/session identifier forwarded with the request.
+//
+// An empty session identifier leaves the context unchanged.
+func ContextWithOpenAISessionID(ctx context.Context, sessionID string) context.Context {
+	return withIdentifiers(ctx, func(ids *identifiers) {
+		if sessionID == "" {
+			return
+		}
+		ids.openAISessionID = sessionID
+	})
 }
 
 // ContextWithSessionID returns a child context that stores the provided MCP session identifier.
@@ -106,6 +120,16 @@ func SessionIDFromContext(ctx context.Context) (string, bool) {
 		return "", false
 	}
 	return ids.sessionID, true
+}
+
+// OpenAISessionIDFromContext extracts the OpenAI conversation/session
+// identifier stored in the context, if present.
+func OpenAISessionIDFromContext(ctx context.Context) (string, bool) {
+	ids, ok := identifiersFromContext(ctx)
+	if !ok || ids.openAISessionID == "" {
+		return "", false
+	}
+	return ids.openAISessionID, true
 }
 
 // RequestIDFromContext extracts the MCP request identifier stored in the context, if present.

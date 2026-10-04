@@ -518,6 +518,9 @@ func TestProcessorForwardsCustomMCPHeaders(t *testing.T) {
 	require.Equal(t, []string{"session-456"}, conn.writeHeaders["X-Openai-Session"])
 	require.Equal(t, []string{"subject-123"}, conn.writeHeaders["X-Openai-Subject"])
 	require.Equal(t, []string{defaultAcceptHeaderValue}, conn.writeHeaders["Accept"])
+	openAISessionID, ok := tunnelctx.OpenAISessionIDFromContext(conn.writeContext)
+	require.True(t, ok)
+	require.Equal(t, "session-456", openAISessionID)
 }
 
 func TestProcessorClonesForwardedHeadersBeforeTransportWrite(t *testing.T) {
@@ -4027,10 +4030,12 @@ type stubForwardingConnection struct {
 	preservedError     *mcpclient.PreservedMCPError
 	writeErr           error
 	writeHeaders       http.Header
+	writeContext       context.Context
 	mutateWriteHeaders func(http.Header)
 }
 
-func (c *stubForwardingConnection) Write(_ context.Context, headers http.Header, _ jsonrpc.Message) (mcpclient.ForwardingWriteResult, error) {
+func (c *stubForwardingConnection) Write(ctx context.Context, headers http.Header, _ jsonrpc.Message) (mcpclient.ForwardingWriteResult, error) {
+	c.writeContext = ctx
 	if headers == nil {
 		c.writeHeaders = nil
 	} else {

@@ -16,6 +16,7 @@ func TestContextIdentifierHelpers(t *testing.T) {
 		tunnelServiceRequestID = "ts-req-abc"
 		requestID              = "req-123"
 		sessionID              = "session-abc"
+		openAISessionID        = "openai-session-abc"
 		shardToken             = "shard-xyz"
 		channel                = types.ChannelHarpoon
 	)
@@ -23,6 +24,7 @@ func TestContextIdentifierHelpers(t *testing.T) {
 	ctx := context.Background()
 	ctx = tunnelctx.ContextWithRequestID(ctx, requestID)
 	ctx = tunnelctx.ContextWithSessionID(ctx, sessionID)
+	ctx = tunnelctx.ContextWithOpenAISessionID(ctx, openAISessionID)
 	ctx = tunnelctx.ContextWithControlPlaneCommandRequestID(ctx, types.ControlPlaneRequestID(controlPlaneRequestID))
 	ctx = tunnelctx.ContextWithTunnelServiceRequestID(ctx, types.TunnelServiceRequestID(tunnelServiceRequestID))
 	ctx = tunnelctx.ContextWithShardToken(ctx, shardToken)
@@ -31,6 +33,11 @@ func TestContextIdentifierHelpers(t *testing.T) {
 	session, ok := tunnelctx.SessionIDFromContext(ctx)
 	if !ok || session != sessionID {
 		t.Fatalf("expected session %q, ok=%v", sessionID, ok)
+	}
+
+	openAISession, ok := tunnelctx.OpenAISessionIDFromContext(ctx)
+	if !ok || openAISession != openAISessionID {
+		t.Fatalf("expected OpenAI session %q, ok=%v", openAISessionID, ok)
 	}
 
 	request, ok := tunnelctx.RequestIDFromContext(ctx)
@@ -62,6 +69,7 @@ func TestContextIdentifierHelpers(t *testing.T) {
 		t.Parallel()
 		ctx := tunnelctx.ContextWithRequestID(ctx, "")
 		ctx = tunnelctx.ContextWithSessionID(ctx, "")
+		ctx = tunnelctx.ContextWithOpenAISessionID(ctx, "")
 		ctx = tunnelctx.ContextWithControlPlaneCommandRequestID(ctx, "")
 		ctx = tunnelctx.ContextWithTunnelServiceRequestID(ctx, "")
 		ctx = tunnelctx.ContextWithShardToken(ctx, "")
@@ -70,6 +78,11 @@ func TestContextIdentifierHelpers(t *testing.T) {
 		session, ok := tunnelctx.SessionIDFromContext(ctx)
 		if !ok || session != sessionID {
 			t.Fatalf("expected existing session to remain, got %q ok=%v", session, ok)
+		}
+
+		openAISession, ok := tunnelctx.OpenAISessionIDFromContext(ctx)
+		if !ok || openAISession != openAISessionID {
+			t.Fatalf("expected existing OpenAI session to remain, got %q ok=%v", openAISession, ok)
 		}
 
 		request, ok := tunnelctx.RequestIDFromContext(ctx)

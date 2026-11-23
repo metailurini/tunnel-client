@@ -1,0 +1,37 @@
+name: Admin UI CI
+
+on:
+  pull_request:
+    paths:
+      - "adminui/**"
+      - "package.json"
+      - ".github/workflows/adminui-ci.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: adminui-ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Admin UI checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6
+        with:
+          node-version: 22.23.3
+      - name: Enable pnpm
+        run: |
+          corepack enable pnpm
+          corepack prepare "pnpm@11.25.0" --activate
+      - name: Install dependencies
+        run: pnpm --dir adminui install --frozen-lockfile --config.shared-workspace-lockfile=false --config.confirmModulesPurge=false
+      - name: Typecheck
+        run: pnpm --dir adminui lint
+      - name: Test
+        run: pnpm --dir adminui test
+      - name: Build
+        run: pnpm --dir adminui build

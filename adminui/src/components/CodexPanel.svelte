@@ -494,7 +494,7 @@
         rows="6"
         placeholder={status?.thread?.id ? "Ask the assistant..." : "Start a new chat first."}
         disabled={!status?.thread?.id || turnBusy}
-      />
+      ></textarea>
       <div class="assistant-composer-row">
         <label class="assistant-check">
           <input type="checkbox" bind:checked={turnInjectContext} />
@@ -538,7 +538,7 @@
 
         <div class="muted">Developer instructions</div>
         <div>
-          <textarea bind:value={threadDeveloperInstructions} rows="5" style="width: 100%" />
+          <textarea bind:value={threadDeveloperInstructions} rows="5" style="width: 100%"></textarea>
         </div>
       </div>
 

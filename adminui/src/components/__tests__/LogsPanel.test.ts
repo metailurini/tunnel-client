@@ -65,6 +65,7 @@ describe("LogsPanel", () => {
     const runtimeLevelSelect = getByRole("combobox", { name: "Runtime log level" }) as HTMLSelectElement;
     await waitFor(() => {
       expect(runtimeLevelSelect.value).toBe("info");
+      expect(runtimeLevelSelect.disabled).toBe(false);
     });
 
     await fireEvent.change(runtimeLevelSelect, { target: { value: "debug" } });
@@ -113,6 +114,7 @@ describe("LogsPanel", () => {
     const runtimeLevelSelect = getByRole("combobox", { name: "Runtime log level" }) as HTMLSelectElement;
     await waitFor(() => {
       expect(runtimeLevelSelect.value).toBe("info");
+      expect(runtimeLevelSelect.disabled).toBe(false);
     });
 
     await fireEvent.change(runtimeLevelSelect, { target: { value: "debug" } });
